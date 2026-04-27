@@ -1,0 +1,256 @@
+/* Rental page styles */
+
+.rentals-container {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+
+
+.first-page {
+    background-image: url("../assets/image.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 70vh;
+    padding: 80px 20px;
+    border-bottom: 1px solid #eee
+}
+
+.details-page{
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+
+.main-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+}
+
+.side-images{
+    display:grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+}
+
+.side-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+}
+
+.content-row {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 28px;
+    align-items: start;
+}
+
+.left-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.price-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: #1a1a1a
+}
+
+.price-per {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.address {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.info-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0ede8;
+    border: 0.5px solid #ddd;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a
+}
+.extra-note {
+    display: inline-flex;
+    align-items: center;
+    color: #2e7d32;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.extra-note::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #43a047;
+    display: inline-block;
+}
+
+.section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 20px 0 8px;
+    }
+
+/* description styles */
+.desc-wrapper {
+    margin-top: 8px;
+}
+
+.desc-text {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 8px;
+}
+
+.desc-bullet {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    padding-left: 14px;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.desc-bullet::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+}
+
+.read-more-btn {
+    background: none;
+    border: none;
+    color: #1a2a3a;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 0;
+    margin-top: 4px;
+    text-decoration: underline;
+    font-family: inherit;
+}
+
+ 
+/* ── Agent card ── */
+.agency-card {
+    background: #fff;
+    border: 0.5px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    position: sticky;
+    top: 16px;
+    text-align: center;
+}
+
+.agent-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e3f0fb;
+    color: #1565c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 16px;
+    margin: 0 auto 10px;
+}
+
+.agency-card img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.agency-card h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.agency-card p {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 14px;
+}
+
+.agency-divider {
+    border: none;
+    border-top: 0.5px solid #eee;
+    margin: 12px 0;
+}
+
+.agency-card button {
+    width: 100%;
+    padding: 10px;
+    background: #1a2a3a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.agency-card button:hover {
+    background: #2d4a6a;
+}
