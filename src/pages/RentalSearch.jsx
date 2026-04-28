@@ -39,18 +39,25 @@ function RentalSearch()
     }, [])
 
     return(
-        <Container>
-            <div className='ag-theme-balham' style={{height:500}}>
-                <AgGridReact theme={themeBalham}
-                modules={[AllCommunityModule]}
-                columnDefs={columns}
-                rowData={rowData}
-                pagination
-                paginationPageSize={20}
-                onRowClicked={row => navigate(`/rentals/?id=${row.data.id}`)}    
-                />
+        <div search-page>
+            <div className='search-page-header'>
+                <p className='search-page-eyebrow'>Australia's rental listings</p>
+                <h1 className='search-page-title'>Find your next home</h1>
+                <p className='search-page-sub'>Browse available rentals. Click any row to view full details</p>
             </div>
-        </Container>
+            <div className='search-grid-wrapper'>
+                <div className='ag-theme-balham' style={{height: 520}}>
+                    <AgGridReact theme={themeBalham}
+                    modules={[AllCommunityModule]}
+                    columnDefs={columns}
+                    rowData={rowData}
+                    pagination
+                    paginationPageSize={20}
+                    onRowClicked={row => navigate(`/rentals/?id=${row.data.id}`)}    
+                    />
+                </div>
+            </div>
+            </div>
     );
 }
 export default RentalSearch;

@@ -6,10 +6,12 @@ import Register from './pages/Register.jsx';
 import RentalSearch from "./pages/RentalSearch.jsx"
 import AppLayout from "./components/AppLayout.jsx";
 import './styles/global.css';
-import './styles/pages.css';
-// import './styles/test.css'
+import './styles/rental-page.css';
+import './styles/rental-search.css'
+import './styles/login-register.css';
 import Test from './pages/Test.jsx';
 import Rentals from "./pages/Rentals.jsx";
+import RatedRental from "./pages/RatedRentals.jsx";
 
 const router = createBrowserRouter([
     {path: "/",
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
       { path: "register", Component: Register },
       { path: "rentalSearch", Component: RentalSearch },
       { path: "rentals", Component: Rentals },
+      { path: "ratedRentals", Component: RatedRental },
       
 
     ]

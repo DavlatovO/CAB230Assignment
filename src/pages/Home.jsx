@@ -3,8 +3,8 @@
 
 function Home(){
     return(
-       <div className="main-wrapper">
-        
+       
+        <>
             <section className="hero-page">
                 <div className="hero-content">
                     <h1>Find your dream home</h1>
@@ -41,7 +41,8 @@ function Home(){
                     <p>this is your new blank page</p>
                 </div>
             </section>
-       </div>
+        </>
+       
         );    
 }
 export default Home;

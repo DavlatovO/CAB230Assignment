@@ -4,10 +4,10 @@ import Footer from './Footer.jsx';
 
 export default function AppLayout() {
     return (
-        <>
-        <NavBar />
-        <Outlet />
-        <Footer />
-        </>
+        <div className='main-wrapper'>
+            <NavBar />
+            <Outlet />
+            <Footer />
+        </div>
     );
 }
