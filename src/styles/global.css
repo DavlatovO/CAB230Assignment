@@ -10,6 +10,11 @@ html, body, #root {
   overflow-x: hidden;
 }
 
+#root {
+  display:flex;
+  flex-direction: column;
+}
+
 body {
   overflow-y: scroll;
   scroll-behavior: smooth;
@@ -17,6 +22,7 @@ body {
 }
 
 .main-wrapper {
+  flex: 1;
   width: 100%;
 }
 
@@ -45,11 +51,37 @@ body {
   background: rgb(29, 27, 27);
 }
 
-.nav-links a {
+.nav-links a,
+.nav-logout {
   color: white !important;
   margin-left:  15px;
   font-weight: 500;
+  opacity: 0.75;
 }
+
+.nav-links a:hover{
+  opacity: 1;
+}
+
+.nav-logout {
+  color: #ff4d4d !important;
+  opacity: 0.75;
+}
+
+.nav-logout:hover {
+  color: #ff4d4d !important;
+  opacity: 1;
+}
+
+.ft-logout{
+  color:white;
+}
+
+.ft-logout:hover{
+  color: #ff4d4d !important;
+  opacity: 1;
+}
+
 
 .logo {
   font-size: 28px;
@@ -99,7 +131,6 @@ body {
 
 /* Footer Section */
 .footer {
-  min-height: auto;
   background: #fff;
   color: #111;
   padding: 48px 60px 24px;

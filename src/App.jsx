@@ -12,6 +12,7 @@ import './styles/login-register.css';
 import Test from './pages/Test.jsx';
 import Rentals from "./pages/Rentals.jsx";
 import RatedRental from "./pages/RatedRentals.jsx";
+import NotFound from "./services/NotFound.jsx";
 
 const router = createBrowserRouter([
     {path: "/",
@@ -24,11 +25,10 @@ const router = createBrowserRouter([
       { path: "rentalSearch", Component: RentalSearch },
       { path: "rentals", Component: Rentals },
       { path: "ratedRentals", Component: RatedRental },
-      
-
+      { path: "*", Component: NotFound},
     ]
   }
-  ])
+  ]);
 
 
 function App() {

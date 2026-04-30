@@ -1,6 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../services/AuthProvider';
 
 function Footer(){
+    const {user, logout} = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () =>{
+        logout();
+        navigate("/");
+    }
+
     return (
         <footer className="footer">
             <div className="footer-section">
@@ -9,8 +18,18 @@ function Footer(){
                     <Link to="/">Home</Link>
                     <Link to="/about">About</Link>
                     <Link to="/rentalSearch">Rental Search</Link>
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
+                    {
+                        user ? (
+                            <>
+                            <Link to="/ratedRentals">My rentals</Link>
+                            <Link to="/" className="ft-logout" onClick={handleLogout}>Log out</Link>
+                            </>
+                        ):(
+                            <>
+                            <Link to="/login">Login</Link>
+                            <Link to="/register">Register</Link>
+                            </>
+                        )} 
                 </div>
 
                 <div className="footer-col">

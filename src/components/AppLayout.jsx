@@ -4,10 +4,13 @@ import Footer from './Footer.jsx';
 
 export default function AppLayout() {
     return (
-        <div className='main-wrapper'>
+        <>
             <NavBar />
-            <Outlet />
+            <div className='main-wrapper'>
+                <Outlet />
+            </div>
             <Footer />
-        </div>
+        
+        </>
     );
 }

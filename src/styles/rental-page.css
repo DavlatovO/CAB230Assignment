@@ -2,7 +2,7 @@
 
 .rentals-container {
     height: 100vh;
-    overflow-y: auto;
+    min-height: 100vh;
 }
 
 
@@ -56,8 +56,7 @@
     max-width: 1100px;
     margin: auto;
     padding: 20px;
-    position: relative;
-    z-index: 1;
+    
 }
 
 .image-grid {
@@ -130,7 +129,7 @@
 .address {
     font-size: 13px;
     color: #666;
-    margin-bottom: 16px;
+    margin-bottom: 0;
 }
 
 .info-row {
@@ -139,6 +138,66 @@
     flex-wrap: wrap;
     margin-bottom: 16px;
 }
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+}
+
+.stars {
+    color: #f5a623;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.rating-value{
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.rating-count {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.rate {
+    font-size: 0.85rem;
+    margin: 0;
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.rate:hover {
+    text-decoration: underline;
+    color: #0056b3
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center; /* vertical alignment */
+    justify-content: center; /* howizontal alignment */
+    z-index: 999;
+}
+.modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: auto;
+    max-width: 90vw;
+    gap: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
 
 .stat-pill {
     display: flex;

@@ -4,16 +4,25 @@ import Description from "../services/Description";
 import image from '../assets/image.png';
 import agency_pic from '../assets/agency.png'
 import MapProperty from "../services/Map";
+import API_URL from "../config";
+import { createPortal } from "react-dom";
+
+
 
 function Rentals() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
     const [rental, setRental] = useState(null);
-
+    const [showRatingModal, setShowRatingModal] = useState(false);
+    const [hoveredStar, setHoveredStar] = useState(0);
+    const [selectedStar, setSelectedStar] = useState(0);
+    const [submitted, setSubmitted] = useState(false);
+    
     useEffect(() => {
+        if (!id) return;
         const fetchRental = async () =>{
-            const response = await fetch(`http://4.237.58.241:3000/rentals/${id}`);
+            const response = await fetch(`${API_URL}/rentals/${id}`);
             if(!response.ok){
                 throw new Error("Error in fetching...");
             }
@@ -25,6 +34,33 @@ function Rentals() {
 
     if(rental === null){
         return(<p>Loading...</p>);
+    }
+
+    const submitRating = async () => {
+        await fetch(`${API_URL}/ratings/rentals/${id}`,{
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({rating: selectedStar})
+        });
+        setSubmitted(true);
+        setTimeout(() => {
+            setShowRatingModal(false);  // ← add this
+            setSelectedStar(0);
+            setSubmitted(false);
+            // re-fetch rental to update displayed average:
+            fetch(`${API_URL}/rentals/${id}`)
+                .then(res => res.json())
+                .then(data => setRental(data));         // ← reset stars
+        }, 1500);
+    };
+
+    const handleRateClick = () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+        } else {
+            setShowRatingModal(true);
+        }
     }
    
 
@@ -55,7 +91,15 @@ function Rentals() {
                             <span className="price-per">week</span>
                         </div>
                         <p className="address">{rental.streetAddress}, {rental.suburb}, {rental.state}</p>
-                        
+                        <div className="rating-row">
+                            <span className="stars">
+                                {"★".repeat(Math.floor(rental.averageRating))}
+                                {"☆".repeat(5 - Math.floor(rental.averageRating))} 
+                            </span>
+                            <span className="rating-value">{rental.averageRating}</span>
+                            <span className="rating-count">({rental.numRatings})</span>
+                            <p className="rate" onClick={handleRateClick}>Rate this property</p>
+                        </div>
                         <div className="info-row">
                             <span className="stat-pill">🛏️{rental.bedrooms} beds</span>
                             <span className="stat-pill">🛁{rental.bathrooms} baths</span>
@@ -83,6 +127,88 @@ function Rentals() {
                     </div>
                 </div>  
             </section>
+            {showRatingModal && createPortal(
+            <div 
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100vw",
+                    height: "100vh",
+                    background: "rgba(0,0,0,0.7)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 99999
+                }}
+                onClick={() => setShowRatingModal(false)}
+            >
+                <div 
+                    style={{
+                        background: "white",
+                        padding: "2rem",
+                        borderRadius: "16px",
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "400px",
+                        gap: "1.5rem",
+                        boxShadow: "0 10px 25px rgba(0,0,0,0.2)"
+                    }}
+                    onClick={e => e.stopPropagation()}
+                > {submitted ? (
+                    <div style={{display:"flex", flexDirection:"column", alignItems:"center", gap:"0.75rem"}}>
+                        <span style={{fontSize: "3rem"}}>✅</span>
+                        <h3>Thanks for your rating!</h3>
+                        <p style={{color: "#888", fontSize: "0.9rem"}}>Your feedback helps others find great homes.</p>
+
+                    </div>
+                ):(
+                    <>
+                    <h3>Rate this property</h3>
+                    <div className="star-selector">
+                        {[1,2,3,4,5].map(star => (
+                            <span
+                                key={star}
+                                style={{color: star <= (hoveredStar || selectedStar) ? "#f5a623" : "#ccc", fontSize: "2rem", cursor: "pointer"}}
+                                onMouseEnter={() => setHoveredStar(star)}
+                                onMouseLeave={() => setHoveredStar(0)}
+                                onClick={() => setSelectedStar(star)}
+                            >★</span>
+                        ))}
+                    </div>
+                    <button onClick={submitRating} disabled={!selectedStar}>Submit</button>
+                    <button onClick={() => setShowRatingModal(false)}>Cancel</button>
+                    </>
+
+
+                )}
+                </div>
+            </div>,
+            document.body
+             )}
+
+
+            {/* {showRatingModal && (
+                                <div className="modal-overlay" onClick={() => setShowRatingModal(false)}>
+                                    <div className="modal" onClick={e => e.stopPropagation()}>
+                                        <h3>Rate this property</h3>
+                                        <div className="star-selector">
+                                            {[1,2,3,4,5].map(star =>(
+                                                <span
+                                                    key={star}
+                                                    style={{color: star <= (hoveredStar || selectedStar) ? "#f5a623" : "#ccc", fontSize: "2rem", cursor: "pointer"}}
+                                                    onMouseEnter={() => setHoveredStar(star)}
+                                                    onMouseLeave={() => setHoveredStar(0)}
+                                                    onClick={() => setSelectedStar(star)}
+                                                >★</span>
+                                            ))}
+                                        </div>
+                                        <button onClick={submitRating} disabled={!selectedStar}>Submit</button>
+                                        <button onClick={() => setShowRatingModal(false)}>Cancel</button>
+                                    </div>
+                                </div>
+            )}  */}
         </>
 
     );
