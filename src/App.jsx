@@ -9,7 +9,6 @@ import './styles/global.css';
 import './styles/rental-page.css';
 import './styles/rental-search.css'
 import './styles/login-register.css';
-import Test from './pages/Test.jsx';
 import Rentals from "./pages/Rentals.jsx";
 import RatedRental from "./pages/RatedRentals.jsx";
 import NotFound from "./services/NotFound.jsx";

@@ -1,18 +1,12 @@
 import { AllCommunityModule, themeBalham } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import {useState, useEffect, useRef } from 'react'
-import { Container, Placeholder } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../config';
 
-const PROPERTY_TYPES = [
-    'acreage/semi-rural', 'apartment', 'duplex/semi-detached',
-    'flat', 'house', 'other', 'studio', 'terrace', 'townhouse', 'unit', 'villa'
-];
 
-const STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'];
 
-function buildQueryParams(page, filters) {
+function buildQueryParams(page, filters, sortModel = []) {
     const params = new URLSearchParams();
 
     params.set('page', page);
@@ -32,13 +26,22 @@ function buildQueryParams(page, filters) {
     if (filters.maximumRating)   params.set('maximumRating', filters.maximumRating);
 
     filters.propertyTypes.forEach(t => params.append('propertyTypes', t));
-
+    if(sortModel.length > 0){
+        params.set('sortBy', sortModel[0].colId);
+        params.set('sortOrder', sortModel[0].sort);
+    }
     return params.toString();
 }
 
 function RentalSearch(){
     const navigate = useNavigate();
     const gridRef = useRef(null);
+    const [states, setStates] = useState([]);
+    const [propertyTypes, setPropertyTypes] = useState([]);
+
+
+    
+    
     const [filters, setFilters] = useState({
         suburb:'', state:'', postcode:'',
         minimumRent: '', maximumRent: '',
@@ -48,9 +51,19 @@ function RentalSearch(){
         minimumRating: '', maximumRating: '',
         propertyTypes: [],
     });
-
+    
     const filtersRef = useRef(filters);
 
+    useEffect(() => {
+        Promise.all([
+            fetch(`${API_URL}/rentals/states`).then(r =>r.json()),
+            fetch(`${API_URL}/rentals/property-types`).then(r =>r.json()), 
+        ]).then(([statesData, typesData])=>{
+            setStates(statesData);
+            setPropertyTypes(typesData);
+        }).catch(err => console.error('Failed to load filter options:', err));
+    }, []);
+    
     const columns = [
         {headerName: "Title",           field: "title",          flex:2},
         { headerName: "Rent",           field: "rent",           flex: 1 },
@@ -63,14 +76,14 @@ function RentalSearch(){
         { headerName: "Parking",        field: "parkingSpaces",  flex: 1 },
         { headerName: "Avg Rating",     field: "averageRating",  flex: 1 },
     ];
-
+    
     const defaultColDef = {flex:1, minWidth: 100};
-
+    
     const datasource = {
-        getRows: async ({ startRow, successCallback, failCallback }) => {
+        getRows: async ({ startRow, successCallback, failCallback, sortModel }) => {
             const perPage = 20;
             const page = Math.floor(startRow / perPage) + 1;
-            const query = buildQueryParams(page, filtersRef.current);
+            const query = buildQueryParams(page, filtersRef.current, sortModel);
             
             try {
                 const response = await fetch(`${API_URL}/rentals/search?${query}`);
@@ -144,7 +157,7 @@ function RentalSearch(){
                         <label>State</label>
                         <select value={filters.state} onChange={e => update('state', e.target.value)}>
                             <option value=''>Any</option>
-                            {STATES.map(s => <option key={s}>{s}</option>)}
+                            {states.map(s => <option key={s}>{s}</option>)}
                         </select>
                     </div>
                     <div className='filter-field'>
@@ -202,7 +215,7 @@ function RentalSearch(){
                     <div className='filter-field filter-field--full'>
                         <label>Property types</label>
                         <div className='type-chips'>
-                            {PROPERTY_TYPES.map(type => (
+                            {propertyTypes.map(type => (
                                 <button
                                     key={type}
                                     className={`chip ${filters.propertyTypes.includes(type) ? 'chip--active' : ''}`}
@@ -224,7 +237,7 @@ function RentalSearch(){
 
             {/* Grid */}
             <div className='search-grid-wrapper'>
-                <div className='ag-theme-balham'>
+                <div className='ag-theme-balham' style={{height:600}}>
                     <AgGridReact
                         ref={gridRef}
                         theme={themeBalham}
@@ -234,7 +247,7 @@ function RentalSearch(){
                         rowModelType='infinite'
                         datasource={datasource}
                         cacheBlockSize={10}
-                        domLayout='autoHeight'
+                        maxBlocksInCache={5}
                         // pagination
                         // paginationPageSize={20}
                         // paginationPageSizeSelector={[20]}
@@ -249,129 +262,3 @@ function RentalSearch(){
 }
 export default RentalSearch;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function RentalSearch()
-// {
-//     const navigate = useNavigate();
-
-//     const columns = [
-//         {headerName: "Title", field:"title", filter:true},
-//         {headerName: "Rent", field:"rent", filter: "agNumberColumnFilter"},
-//         {headerName: "Property Type", field:"propertyType"},
-//         {headerName: "Post Code", field:"postcode"},
-//         {headerName: "State", field:"state"},
-//         {headerName: "Suburb", field:"suburb"},
-//         {headerName: "Bathrooms", field:"bathrooms"},
-//         {headerName: "Bedrooms", field:"bedrooms"},
-//         {headerName: "Parking Space", field:"parkingSpaces"},
-//         {headerName: "Average Rating", field:"averageRating", Placeholder:"0"},
-//     ];
-
-//     const defaultColDef = {
-//         flex: 1,
-//         minWidth: 100,
-//     }
-
-//     const datasource = {
-//         getRows: async (props) =>{
-//             const {startRow, endRow, successCallback, failCallback, sortModel, filterModel} = props;
-
-//             const perPage = endRow - startRow;
-//             const page = Math.floor(startRow / perPage) + 1;
-
-//             let queryParams = `page=${page}&perPage=${perPage}`;
-
-//             if(sortModel.length > 0) {
-//                 queryParams += `&sortBy=${sortModel[0].colId}&sortOrder=${sortModel[0].sort}`;
-//             }
-
-//             if(Object.keys(filterModel).length > 0){
-//                 const filterKey = Object.keys(filterModel)[0];
-//                 queryParams += `&${filterKey}=${filterModel[filterKey].filter}`;
-//             }
-
-
-//             try {
-//                 const response = await fetch(`${API_URL}/rentals/search?${queryParams}`);
-//                 if(!response.ok) throw new Error('Failed to fetch rentals');
-                
-//                 const {data, pagination} = await response.json();
-//                 successCallback(data, pagination.total);
-//             }catch(error){
-//                 console.error("Datasource error: ",error);
-//                 failCallback();
-//             }
-
-//         }
-            
-//     };
-
-//     return(
-//         <>
-//             <div className='search-page'>
-//                 <div className='search-page-header'>
-//                     <p className='search-page-eyebrow'>Australia's rental listings</p>
-//                     <h1 className='search-page-title'>Find your next home</h1>
-//                     <p className='search-page-sub'>Browse available rentals. Click any row to view full details</p>
-//                 </div>
-//                 <div className='search-grid-wrapper'>
-//                     <div className='ag-theme-balham' style={{height: 520}} >
-//                         <AgGridReact theme={themeBalham}
-//                         modules={[AllCommunityModule]}
-//                         defaultColDef={defaultColDef}
-//                         columnDefs={columns}
-//                         rowModelType='infinite'
-//                         datasource={datasource}
-//                         cacheBlockSize={10}
-//                         // pagination
-//                         // paginationPageSize={10}
-//                         onRowClicked={row => navigate(`/rentals/?id=${row.data.id}`)}    
-//                         />
-//                     </div>
-//                 </div>
-//             </div>
-//         </>
-//     );
-// }
-// export default RentalSearch;
