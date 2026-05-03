@@ -4,7 +4,7 @@ const PREVIEW_LINES = 4;
 
 export default function Description({ description }) {
     const [expanded, setExpanded] = useState(false);
-
+    if(!description) return <p>No description available</p>
     const lines = description
         .replace(/<br\s*\/?>/gi, '\n')
         .split('\n')

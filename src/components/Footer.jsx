@@ -39,10 +39,10 @@ function Footer(){
                 </div>
                 <div className="footer-col">
                     <h4>Locations</h4>
-                    <a href="#">Brisbane</a>
-                    <a href="#">Sydney</a>
-                    <a href="#">Melbourne</a>
-                    <a href="#">Perth</a>
+                    <a href="#">Queensland</a>
+                    <a href="#">North South Wales</a>
+                    <a href="#">Victoria</a>
+                    <a href="#">South Australia</a>
                 </div>
 
             <div className="footer-bottom">

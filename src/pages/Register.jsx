@@ -1,38 +1,61 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form, Button } from "react-bootstrap";
 import API_URL from "../config";
+import { useState } from "react";
 
 function Register() {
-
+    const [feedback, setFeedback] = useState(null);
     const navigate = useNavigate();
-    const register = (event) => {
+
+    const validate = (email, password) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !password) return "Please fill in both email and password.";
+    if (!emailRegex.test(email)) return "Please enter a valid email address.";
+    if (password.length < 8) return "Password must be at least 8 characters.";
+    if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter.";
+    if (!/[0-9]/.test(password)) return "Password must contain at least one number.";
+    return null;
+    };
+  
+    const register = async (event) => {
         event.preventDefault();
 
         const email = event.target.elements.email.value;
         const password = event.target.elements.password.value;
 
-        const url = `${API_URL}/user/register`
-
-        return fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({email, password})
-        })
-        .then(response => {
-            if(!response.ok){
-                throw new Error(`Htttp error: ${response.status}`);
+        const validationError = validate(email, password);
+        if (validationError){
+          setFeedback({ success:false, message:validationError });
+          return;
+        }
+                
+        try{
+            const response = await fetch(`${API_URL}/user/register`,{
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ email, password })
+            });
+        
+            if (response.status === 409) {
+              const data = await response.json();
+              setFeedback({ success:false, message: data.message });
+              return;
             }
-            return response.json();
-        })
-        .then(data => {
+          
+            if(!response.ok){
+              setFeedback("Something went wrong. Please try again.");
+              return;
+            }
+            const data = await response.json();
             localStorage.setItem("token", data.token);
-            console.log("hello");
-            navigate("/login");
-        })
-        .catch(error => console.log(error));
-    }
+            setTimeout(() => navigate("/login"), 1000);
+        
+          } catch(err){
+               setFeedback({ success:false, message:err });}
+            
+    };
 
 
   return (
@@ -47,6 +70,10 @@ function Register() {
         <FloatingLabel  label="Password" className="mb-3">
           <Form.Control type="password" name="password" id="password" placeholder="Password" />
         </FloatingLabel>
+
+          {feedback && (
+            <p style={{ color: feedback.success ? "green": "red", fontSize:"0.875rem" }}>{feedback.message}</p>
+          )}
 
         <Button variant="primary" type="submit" className="register-submit">Register</Button>
         </form>

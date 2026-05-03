@@ -4,7 +4,7 @@ function NotFound(){
     const navigate = useNavigate();
 
     return (
-        <div>
+        <div style={{display:"flex", justifyContent:"center", alignItems:"center", flexDirection:"column", height:"100vh"}}>
             <h1>404</h1>
             <h2>Page Not Found</h2>
             <p>The page you are looking for is not found </p>

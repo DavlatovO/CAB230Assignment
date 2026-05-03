@@ -3,6 +3,34 @@ import { AgGridReact } from 'ag-grid-react';
 import {useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../config';
+import Spinner from 'react-bootstrap/Spinner';
+
+
+const StarRenderer = (p) => {
+    if (p.value == null) return <span style={{ color: '#ccc' }}>☆☆☆☆☆</span>;
+    const full = Math.floor(p.value);
+    const empty = 5 - full;
+    return (
+        <span style={{ color: '#f5a623', fontSize: '14px', letterSpacing: '2px' }}>
+            {'★'.repeat(full)}{'☆'.repeat(empty)}
+            <span style={{ color: '#aaa', fontSize: '11px', marginLeft: '5px' }}>
+                ({Number(p.value).toFixed(1)})
+            </span>
+        </span>
+    );
+};
+
+
+const gridTheme = themeBalham.withParams({
+    headerTextColor: '#888',
+    headerFontSize: 11,
+    headerFontWeight: 600,
+    headerBackgroundColor: '#fafafa',
+    rowHoverColor: '#f7f7f5',
+    borderColor: '#f0f0f0',
+    fontFamily: 'inherit',
+    fontSize: 13,
+});
 
 
 
@@ -39,7 +67,6 @@ function RentalSearch(){
     const [states, setStates] = useState([]);
     const [propertyTypes, setPropertyTypes] = useState([]);
 
-
     
     
     const [filters, setFilters] = useState({
@@ -65,23 +92,31 @@ function RentalSearch(){
     }, []);
     
     const columns = [
-        {headerName: "Title",           field: "title",          flex:2},
-        { headerName: "Rent",           field: "rent",           flex: 1 },
-        { headerName: "Property Type",  field: "propertyType",   flex: 1 },
-        { headerName: "Post Code",      field: "postcode",       flex: 1 },
-        { headerName: "State",          field: "state",          flex: 1 },
-        { headerName: "Suburb",         field: "suburb",         flex: 1 },
-        { headerName: "Bathrooms",      field: "bathrooms",      flex: 1 },
-        { headerName: "Bedrooms",       field: "bedrooms",       flex: 1 },
-        { headerName: "Parking",        field: "parkingSpaces",  flex: 1 },
-        { headerName: "Avg Rating",     field: "averageRating",  flex: 1 },
+        { headerName: "Title", field: "title", flex: 3, minWidth: 200,
+        cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'flex-start' } },
+        { headerName: "Rent/wk",       field: "rent",          flex: 1, minWidth: 90,
+        valueFormatter: p => p.value ? `$${p.value.toLocaleString()}` : '' },
+        { headerName: "Type",          field: "propertyType",  flex: 1, minWidth: 90 },
+        { headerName: "Suburb",        field: "suburb",        flex: 1, minWidth: 100 },
+        { headerName: "State",         field: "state",         flex: 0.6, minWidth: 70 },
+        { headerName: "Postcode",      field: "postcode",      flex: 0.7, minWidth: 80 },
+        { headerName: "Beds",          field: "bedrooms",      flex: 0.6, minWidth: 60 },
+        { headerName: "Baths",         field: "bathrooms",     flex: 0.6, minWidth: 60 },
+        { headerName: "Parking",       field: "parkingSpaces", flex: 0.6, minWidth: 70 },
+        { headerName: "Avg Rating",    field: "averageRating", flex: 1.2, minWidth: 120,
+        cellRenderer: StarRenderer },
     ];
     
-    const defaultColDef = {flex:1, minWidth: 100};
+    const defaultColDef = {
+        flex:1,
+        minWidth: 100,
+        cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center'},
+    };
     
-    const datasource = {
+    const datasource = useRef({
         getRows: async ({ startRow, successCallback, failCallback, sortModel }) => {
-            const perPage = 20;
+            gridRef.current?.api.setGridOption("loading", true);
+            const perPage = 10;
             const page = Math.floor(startRow / perPage) + 1;
             const query = buildQueryParams(page, filtersRef.current, sortModel);
             
@@ -93,11 +128,13 @@ function RentalSearch(){
             } catch(error){
                 console.error(error);
                 failCallback();
+            } finally {
+                gridRef.current?.api.setGridOption("loading", false);
             }
         
         
         }
-    };
+    }).current;
 
     const update = (field, value) => {
         const updated = {...filters, [field]: value};
@@ -237,10 +274,10 @@ function RentalSearch(){
 
             {/* Grid */}
             <div className='search-grid-wrapper'>
-                <div className='ag-theme-balham' style={{height:600}}>
+                <div className='ag-theme-balham' style={{height:620}}>
                     <AgGridReact
                         ref={gridRef}
-                        theme={themeBalham}
+                        theme={gridTheme}
                         modules={[AllCommunityModule]}
                         columnDefs={columns}
                         defaultColDef={defaultColDef}
@@ -248,11 +285,15 @@ function RentalSearch(){
                         datasource={datasource}
                         cacheBlockSize={10}
                         maxBlocksInCache={5}
+                        overlayLoadingTemplate=' <div style="display:flex; align-items:center; gap:8px; color:#888; font-size:13px">
+                                                    <div style="width:16px; height:16px; border:2px solid #ccc; border-top-color:#555; border-radius:50%; animation:spin 0.7s linear infinite"></div>
+                                                    Loading...
+                                                </div>'
+                        overlayNoRowsTemplate='<span style="padding:12px; color:#888; font-size:13px"> No rentals found matching</span>'
                         // pagination
                         // paginationPageSize={20}
                         // paginationPageSizeSelector={[20]}
-                        overlayNoRowsTemplate='No rentals found matching your filters'
-                        onRowClicked={row => navigate(`/rentals/?id=${row.data.id}`)}
+                        onRowClicked={row => navigate(`/rentals/${row.data.id}`)}
                     />
                 </div>
             </div>
@@ -261,4 +302,3 @@ function RentalSearch(){
 
 }
 export default RentalSearch;
-

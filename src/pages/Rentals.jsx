@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import {useNavigate, useSearchParams } from 'react-router-dom';
+import {useNavigate, useParams } from 'react-router-dom';
 import Description from "../services/Description";
 import image from '../assets/image.png';
 import agency_pic from '../assets/agency.png'
 import MapProperty from "../services/Map";
 import API_URL from "../config";
 import { createPortal } from "react-dom";
+import { Car, Bath, BedSingle } from "lucide-react";
 
 
 
 function Rentals() {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const id = searchParams.get("id");
+    const { id } = useParams();
     const [rental, setRental] = useState(null);
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [hoveredStar, setHoveredStar] = useState(0);
@@ -37,21 +37,36 @@ function Rentals() {
     }
 
     const submitRating = async () => {
-        await fetch(`${API_URL}/ratings/rentals/${id}`,{
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({rating: selectedStar})
-        });
-        setSubmitted(true);
-        setTimeout(() => {
-            setShowRatingModal(false);  // ← add this
-            setSelectedStar(0);
-            setSubmitted(false);
-            // re-fetch rental to update displayed average:
-            fetch(`${API_URL}/rentals/${id}`)
-                .then(res => res.json())
-                .then(data => setRental(data));         // ← reset stars
-        }, 1500);
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`${API_URL}/ratings/rentals/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({rating: selectedStar})
+            });    
+
+            if (!response.ok){
+                throw new Error("Failed to submit rating");
+            }
+
+            setSubmitted(true);
+            setTimeout(() => {
+                setShowRatingModal(false);  
+                setSelectedStar(0);
+                setSubmitted(false);
+                // re-fetch rental to update displayed average:
+                fetch(`${API_URL}/rentals/${id}`, {
+                    headers: {"Authorization":`Bearer ${token}`}
+                })
+                    .then(res => res.json())
+                    .then(data => setRental(data));         // ← reset stars
+            }, 1500);
+        } catch (err) {
+            console.error("Rating error: ", err);
+        }
     };
 
     const handleRateClick = () => {
@@ -90,7 +105,7 @@ function Rentals() {
                             <span className="price-main">${rental.rent} /</span>
                             <span className="price-per">week</span>
                         </div>
-                        <p className="address">{rental.streetAddress}, {rental.suburb}, {rental.state}</p>
+                        <p className="address">{rental.streetAddress}, {rental.suburb}, {rental.state} {rental.postcode}</p>
                         <div className="rating-row">
                             <span className="stars">
                                 {"★".repeat(Math.floor(rental.averageRating))}
@@ -101,9 +116,9 @@ function Rentals() {
                             <p className="rate" onClick={handleRateClick}>Rate this property</p>
                         </div>
                         <div className="info-row">
-                            <span className="stat-pill">🛏️{rental.bedrooms} beds</span>
-                            <span className="stat-pill">🛁{rental.bathrooms} baths</span>
-                            <span className="stat-pill">🚘{rental.parkingSpaces} cars</span>
+                            <span className="stat-pill"><BedSingle size={25} strokeWidth={1.5}/>{rental.bedrooms}</span>
+                            <span className="stat-pill"><Bath size={25} strokeWidth={1.5}/>{rental.bathrooms}</span>
+                            <span className="stat-pill"><Car size={25} strokeWidth={1.5}/>{rental.parkingSpaces}</span>
                             <span className="stat-pill">{rental.propertyType}</span>
                         </div>
                         <p className="extra-note">{rental.amenities}</p>
@@ -187,28 +202,6 @@ function Rentals() {
             </div>,
             document.body
              )}
-
-
-            {/* {showRatingModal && (
-                                <div className="modal-overlay" onClick={() => setShowRatingModal(false)}>
-                                    <div className="modal" onClick={e => e.stopPropagation()}>
-                                        <h3>Rate this property</h3>
-                                        <div className="star-selector">
-                                            {[1,2,3,4,5].map(star =>(
-                                                <span
-                                                    key={star}
-                                                    style={{color: star <= (hoveredStar || selectedStar) ? "#f5a623" : "#ccc", fontSize: "2rem", cursor: "pointer"}}
-                                                    onMouseEnter={() => setHoveredStar(star)}
-                                                    onMouseLeave={() => setHoveredStar(0)}
-                                                    onClick={() => setSelectedStar(star)}
-                                                >★</span>
-                                            ))}
-                                        </div>
-                                        <button onClick={submitRating} disabled={!selectedStar}>Submit</button>
-                                        <button onClick={() => setShowRatingModal(false)}>Cancel</button>
-                                    </div>
-                                </div>
-            )}  */}
         </>
 
     );

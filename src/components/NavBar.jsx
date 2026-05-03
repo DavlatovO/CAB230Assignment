@@ -9,7 +9,7 @@ function NavBar(){
 
     const handleLogout = () =>{
         logout();
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000);
     }
 
     return (

@@ -9,6 +9,9 @@ import './styles/global.css';
 import './styles/rental-page.css';
 import './styles/rental-search.css'
 import './styles/login-register.css';
+import './styles/rated-rental.css';
+import './styles/about.css'
+import './styles/home.css'
 import Rentals from "./pages/Rentals.jsx";
 import RatedRental from "./pages/RatedRentals.jsx";
 import NotFound from "./services/NotFound.jsx";
@@ -22,9 +25,10 @@ const router = createBrowserRouter([
       { path: "login", Component: Login },
       { path: "register", Component: Register },
       { path: "rentalSearch", Component: RentalSearch },
-      { path: "rentals", Component: Rentals },
       { path: "ratedRentals", Component: RatedRental },
+      { path: "rentals/:id", Component: Rentals },
       { path: "*", Component: NotFound},
+      
     ]
   }
   ]);

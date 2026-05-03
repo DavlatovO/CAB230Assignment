@@ -3,7 +3,7 @@
     background: #f9f8f6;
     padding: 100px 40px 80px;
     max-width: 1400px;
-    margin: 0 auto;   
+    margin: 0 auto;  
 }
 
 .search-page-header {
@@ -33,20 +33,6 @@
     margin: 0;
 }
 
-
-.search-grid-wrapper {
-    background: #fff;
-    border-radius: 12px;
-    border: 0.5px solid #ddd;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    height: 560px;
-}
-
-.ag-theme-balham .ag-row:hover {
-    background-color: #f0f4ff;
-    cursor: pointer;
-}
 
 .search-filters {
     background: #fff;
@@ -150,7 +136,7 @@
 }
 
 .chip--active {
-    background: #b1aeae;
+    background: #302f2fb8;
     color: #fff;
     border-color: #1a1a1a;
 }
@@ -171,17 +157,18 @@
     padding: 0 16px;
     border-radius: 8px;
     border: 0.5px solid #ccc;
-    background: transparent;
+    background:transparent;
     font-size: 13px;
     color: #888;
     cursor: pointer;
     transition: all 0.15s;
 }
 
-.btn-clear:hover {
+.btn-clear:hover{
     border-color: #888;
     color: #1a1a1a;
 }
+
 
 .btn-search {
     height: 36px;
@@ -196,26 +183,22 @@
     transition: background 0.15s;
 }
 
-.btn-search:hover {
-    background: #333;
+.btn-search:hover{
+    background: #888;
 }
-
-/* ── Grid wrapper ───────────────────────────────────────── */
 
 .search-grid-wrapper {
     background: #fff;
     border-radius: 12px;
     border: 0.5px solid #ddd;
     overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 12px rgba(0,0,0, 0.06);
 }
 
 .ag-theme-balham .ag-row:hover {
     background-color: #f0f4ff;
     cursor: pointer;
 }
-
-/* ── Loading spinner ────────────────────────────────────── */
 
 .grid-loading {
     display: flex;
@@ -234,6 +217,34 @@
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
     flex-shrink: 0;
+
+}
+
+@keyframes spin {
+    to {transform: rotate(360deg);}
+}
+
+
+/* Center all header labels */
+.ag-header-center .ag-header-cell-label {
+    justify-content: center;
+}
+
+/* Rent column — green like a price */
+.ag-theme-balham .ag-cell[col-id="rent"] {
+    color: #38a169;
+    font-weight: 600;
+}
+
+/* Title column — slightly bolder */
+.ag-theme-balham .ag-cell[col-id="title"] {
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+/* Tighten row height */
+.ag-theme-balham .ag-row {
+    height: 44px !important;
 }
 
 @keyframes spin {

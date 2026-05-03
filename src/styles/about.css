@@ -1,0 +1,209 @@
+/* ── About Hero ────────────────────────────────────────── */
+.about-hero {
+    width: 100%;
+    height: 100vh;
+    background-image: url("../assets/image.jpeg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;        /* vertically center, not bottom */
+    padding: 0 80px;            /* horizontal padding only */
+}
+
+/* dark gradient at bottom so text reads clearly */
+.about-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);  /* simple dark overlay, no directional gradient */
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    padding: 0 24px;     
+}
+
+.about-eyebrow {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 16px;
+}
+
+.about-hero-content h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.05;
+    margin-bottom: 20px;
+}
+
+.about-sub {
+    font-size: 25px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.7;
+    text-align: center;
+    max-width: 420px;
+    margin: 0 auto;             /* center the narrower subtitle under the heading */
+}
+/* ── Shared container ──────────────────────────────────── */
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* ── Sections ──────────────────────────────────────────── */
+.about-section {
+    padding: 80px 0;
+    background: #f9f8f6;
+}
+
+.about-section:nth-child(even) {
+    background: #fff;
+}
+
+.section-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.about-text-block h2,
+.about-section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.about-text-block p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto;            /* center the paragraph too */
+}
+
+/* ── Stats ─────────────────────────────────────────────── */
+.about-stats-section {
+    background: #1a1a1a;
+    padding: 60px 0;
+}
+
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    text-align: center;
+}
+
+.about-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.about-stat-number {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.about-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+}
+
+/* ── Value cards ───────────────────────────────────────── */
+.about-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.about-card {
+    background: #fff;
+    border: 0.5px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 32px 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s;
+}
+
+.about-card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+}
+
+.about-card-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.about-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.about-card p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.7;
+}
+
+/* ── CTA ───────────────────────────────────────────────── */
+.about-cta {
+    background: #fff;
+    padding: 80px 0;
+    border-top: 0.5px solid #e5e5e5;
+}
+
+.about-cta-inner {
+    text-align: center;
+}
+
+.about-cta h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+.about-cta p {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 28px;
+}
+
+.about-cta-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.about-cta-btn:hover {
+    background: #555;
+    color: #fff;
+}
