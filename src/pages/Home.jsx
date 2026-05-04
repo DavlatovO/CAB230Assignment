@@ -5,6 +5,7 @@ import { Bath, BedSingle, Car } from "lucide-react";
 import defaultImage from "../assets/image.png";
 
 
+// Renders a single rental card for the home page listing
 function PropertyCard({ rental }) {
     const navigate = useNavigate();
     return (
@@ -45,6 +46,7 @@ function Home() {
         maximumRent: "",
     });
 
+    // Load rentals from the search endpoint with optional quick filter parameters
     const fetchRentals = async (filters = {}) => {
         setLoading(true);
         setError(null);
@@ -65,6 +67,7 @@ function Home() {
         }
     };
 
+    // Initial page load: fetch latest rentals and available filter options
     useEffect(() => {
         fetchRentals();
 
@@ -80,6 +83,7 @@ function Home() {
     }, []);
 
     const handleSearch = () => {
+        // Apply the quick filter selections to the rental list
         fetchRentals(quickFilter);  // fetch with filters, stay on page
     };
 

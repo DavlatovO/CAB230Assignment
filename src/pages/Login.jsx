@@ -13,6 +13,7 @@ function Login(){
     const { login } = useAuth();
     const[error, setError] = useState(null);
 
+    // Validate login form values before submitting
     const validate = (email, password) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !password) return "Please fill in email or password.";

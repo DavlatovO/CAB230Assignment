@@ -10,6 +10,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 
 
+// Custom renderer to display numeric rating values as star icons
 const StarRenderer = (p) => {
     const stars = p.value || 0;
     return (
@@ -19,6 +20,7 @@ const StarRenderer = (p) => {
     )
 };
 
+// Fetch rental title for the grid cell when only rentalId is available
 const RentalName = (p) => {
     const [name, setName] = useState('Loading...');
 
@@ -48,6 +50,7 @@ export default function RatedRental() {
     const [error, setError] = useState(null);
     const [total, setTotal] = useState(0);
 
+    // Column definitions for the rated rentals AG Grid view
     const columns = [
         {headerName: "Rated Rental", field:"rentalId", flex:2, filter:true, cellRenderer: RentalName },
         {headerName: "rating", field:"rating", flex:1, cellRenderer: StarRenderer },
@@ -61,6 +64,10 @@ export default function RatedRental() {
 
     
     const token = localStorage.getItem("token");
+    if(!token){
+        return <Navigate to="/login" />
+    }
+    // AG Grid datasource used for infinite scrolling and server-side pagination
     const datasource = {
             getRows: async (props) =>{
                 const {startRow, endRow, successCallback, failCallback, sortModel, filterModel} = props;
@@ -101,11 +108,6 @@ export default function RatedRental() {
         minWidth: 100,
         headerClass: 'ag-header-center',
     };
-    
-    
-    if(!token){
-        return <Navigate to="/login" replace />
-    }
     
 
     return (

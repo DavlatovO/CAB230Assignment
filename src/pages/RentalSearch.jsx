@@ -6,6 +6,7 @@ import API_URL from '../config';
 import Spinner from 'react-bootstrap/Spinner';
 
 
+// Render average ratings as stars with a decimal value label
 const StarRenderer = (p) => {
     if (p.value == null) return <span style={{ color: '#ccc' }}>☆☆☆☆☆</span>;
     const full = Math.floor(p.value);
@@ -34,6 +35,7 @@ const gridTheme = themeBalham.withParams({
 
 
 
+// Build URL query parameters for search requests using current filters and sort state
 function buildQueryParams(page, filters, sortModel = []) {
     const params = new URLSearchParams();
 
@@ -91,6 +93,7 @@ function RentalSearch(){
         }).catch(err => console.error('Failed to load filter options:', err));
     }, []);
     
+    // Grid column configuration for rental search results
     const columns = [
         { headerName: "Title", field: "title", flex: 3, minWidth: 200,
         cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'flex-start' } },
@@ -113,6 +116,7 @@ function RentalSearch(){
         cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center'},
     };
     
+    // Infinite row datasource for AG Grid using server-side search results
     const datasource = useRef({
         getRows: async ({ startRow, successCallback, failCallback, sortModel }) => {
             gridRef.current?.api.setGridOption("loading", true);
@@ -153,10 +157,12 @@ function RentalSearch(){
         filtersRef.current = updated;
     };
 
+    // Refresh grid with the current filters applied
     const applyFilters = () =>{
         gridRef.current?.api.purgeInfiniteCache();
     };
 
+    // Reset all filters to their default empty state and reload the grid
     const clearFilters = () => {
         const cleared = {
             suburb: '', state: '', postcode: '',
@@ -171,7 +177,6 @@ function RentalSearch(){
         filtersRef.current = cleared;
         gridRef.current?.api.purgeInfiniteCache();
     };
-    
 
     return (
         <div className='search-page'>

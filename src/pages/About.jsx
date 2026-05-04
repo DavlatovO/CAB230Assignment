@@ -11,6 +11,8 @@ function About() {
                     <p className="about-eyebrow">Who we are</p>
                     <h1>Helping Australians<br />find home</h1>
                     <p className="about-sub">We make finding your next rental simple, transparent, and stress-free.</p>
+                    <h2>"We acknowledge the Traditional Custodians of the lands on which <br />this platform  operates and pay our respects to <br />Elders past, present and emerging."
+                    </h2>
                 </div>
             </section>
 

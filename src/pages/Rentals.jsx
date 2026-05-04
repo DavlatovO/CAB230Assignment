@@ -10,6 +10,7 @@ import { Car, Bath, BedSingle } from "lucide-react";
 
 
 
+// Page component for viewing a single rental and submitting a rating
 function Rentals() {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -36,8 +37,16 @@ function Rentals() {
         return(<p>Loading...</p>);
     }
 
+    // Send the user's selected rating for this rental to the API
     const submitRating = async () => {
         const token = localStorage.getItem("token");
+
+        // Guard: no token at submit time (e.g. token was cleared mid-session)
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
         try {
             const response = await fetch(`${API_URL}/ratings/rentals/${id}`, {
                 method: "POST",
@@ -45,34 +54,42 @@ function Rentals() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({rating: selectedStar})
-            });    
+                body: JSON.stringify({ rating: selectedStar })
+            });
 
-            if (!response.ok){
+            // Redirect to login if token is expired or unauthorised
+            if (response.status === 401) {
+                localStorage.removeItem("token"); // clear stale token
+                navigate("/login");
+                return;
+            }
+
+            if (!response.ok) {
                 throw new Error("Failed to submit rating");
             }
 
             setSubmitted(true);
             setTimeout(() => {
-                setShowRatingModal(false);  
+                setShowRatingModal(false);
                 setSelectedStar(0);
                 setSubmitted(false);
-                // re-fetch rental to update displayed average:
                 fetch(`${API_URL}/rentals/${id}`, {
-                    headers: {"Authorization":`Bearer ${token}`}
+                    headers: { "Authorization": `Bearer ${token}` }
                 })
                     .then(res => res.json())
-                    .then(data => setRental(data));         // ← reset stars
+                    .then(data => setRental(data));
             }, 1500);
+
         } catch (err) {
             console.error("Rating error: ", err);
         }
-    };
-
+        };
+    // Require login before showing the rating modal
     const handleRateClick = () => {
         const token = localStorage.getItem("token");
         if (!token) {
             navigate("/login");
+            return;
         } else {
             setShowRatingModal(true);
         }

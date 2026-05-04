@@ -44,6 +44,13 @@
     margin-bottom: 20px;
 }
 
+.about-hero-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.05;
+    margin-top: 100px;
+    margin-bottom: 0;
+}
 .about-sub {
     font-size: 25px;
     color: rgba(255, 255, 255, 0.75);
